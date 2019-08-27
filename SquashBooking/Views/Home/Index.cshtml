@@ -1,0 +1,135 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+<header>
+
+    <script>
+        $(document).ready(function () {
+
+            var date = new Date();
+            var d = date.getDate();
+            var m = date.getMonth();
+            var y = date.getFullYear();
+
+            var events_array = [
+                {
+                    title: 'Test1',
+                    start: new Date(2012, 8, 20),
+                    tip: 'Personal tip 1'
+                },
+                {
+                    title: 'Test2',
+                    start: new Date(2012, 8, 21),
+                    tip: 'Personal tip 2'
+                }
+            ];
+
+            $('#calendar').fullCalendar({
+                header: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'month,agendaWeek,agendaDay'
+                },
+                themeSystem: 'bootstrap4',
+                selectable: true,
+                events: events_array,
+                eventRender: function (event, element) {
+                    element.attr('title', event.tip);
+                },
+
+                select: function (start, end, jsEvent, view) {
+                    var abc = prompt('Enter Title');
+                    var allDay = !start.hasTime && !end.hasTime;
+                    var newEvent = new Object();
+                    newEvent.title = abc;
+                    newEvent.start = moment(start).format();
+                    newEvent.end = moment(end).format();
+                    newEvent.allDay = false;
+                    $('#calendar').fullCalendar('renderEvent', newEvent);
+
+                },
+                eventClick: function (calEvent, jsEvent, view) {
+
+                    alert('Event: ' + calEvent.title);
+                    alert('Coordinates: ' + jsEvent.pageX + ',' + jsEvent.pageY);
+                    alert('View: ' + view.name);
+
+                    // change the border color just for fun
+                    $(this).css('border-color', 'red');
+
+                }
+
+            });
+        });
+
+        $(document).ready(function () {
+            $('#datepicker').datepicker({
+                inline: true,
+                onSelect: function (dateText, inst) {
+                    var d = new Date(dateText);
+                    $('#calendar').fullCalendar('gotoDate', d);
+                }
+            });
+        });
+
+    </script>
+</header>
+
+<div class="row">
+    <div style="float:left">
+        <div id="datepicker"></div><br />
+        <div style="padding-bottom:5px">
+            <div style="width:40px;float:left;">Title:</div><input type="text" style="width:185px" id="eventTitle" />
+        </div>
+        <div>
+            <div style="width:40px;float:left;">Start:</div>
+            <select id="fromHours">
+                <option>09</option>
+                <option>10</option>
+                <option>11</option>
+                <option>12</option>
+                <option>13</option>
+                <option>14</option>
+                <option>15</option>
+                <option>16</option>
+                <option>17</option>
+                <option>18</option>
+                <option>19</option>
+                <option>20</option>
+            </select>:<select id="fromMinutes">
+                <option>00</option>
+                <option>15</option>
+                <option>30</option>
+                <option>45</option>
+            </select>
+        </div>
+        <div>
+            <div style="width:40px;float:left;">Finish:</div>
+            <select id="toHours">
+                <option>09</option>
+                <option>10</option>
+                <option>11</option>
+                <option>12</option>
+                <option>13</option>
+                <option>14</option>
+                <option>15</option>
+                <option>16</option>
+                <option>17</option>
+                <option>18</option>
+                <option>19</option>
+                <option>20</option>
+            </select>:<select id="toMinutes">
+                <option>00</option>
+                <option>15</option>
+                <option>30</option>
+                <option>45</option>
+            </select>
+        </div>
+        <div>
+            <div style="width:40px;float:left;">&nbsp;</div>
+            <input type="button" value="Add" onclick="AddEvent()" />
+        </div>
+    </div>
+    <div id="datepicker"></div>
+    <div id="calendar"></div>
+</div>
